@@ -1,4 +1,4 @@
-import { ProductsListPage } from "./products-list"
+import { ProductsListPage } from "./"
 import { render } from '@testing-library/react'
 
 describe('Pages > Products > Products list', () => {

@@ -1,10 +1,15 @@
-import { ProductsListPage } from './pages/products/products-list'
+import { Theme } from '@radix-ui/themes';
+import { ReactNode } from 'react';
 
-function App() {
+interface AppProps {
+  children: ReactNode
+}
+
+function App({ children }: AppProps) {
   return (
-    <main>
-      <ProductsListPage />
-    </main>
+    <Theme appearance="dark">
+      {children}
+    </Theme>    
   )
 }
 
