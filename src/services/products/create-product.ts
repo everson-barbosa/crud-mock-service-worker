@@ -1,12 +1,31 @@
 import axios from "axios"
+import { APIResponse } from "../../types/core/API-Response"
 import { Product } from "../../types/entities/Product"
 
-type CreateProductParams = Omit<Product, 'id'>
+export interface CreateProductRequest {
+    name: string
+    description: string
+    price: number
+}
 
-export const createProduct = async (params: CreateProductParams) => {
-    axios.post('http://localhost:8080/api/products', params, {
-        headers: {
-            'Content-Type': 'application/json'
+export interface CreateProductData {
+    product: Product
+}
+
+export type CreateProductResponse = APIResponse<CreateProductData>
+
+export const createProduct = async ({ name, description, price }: CreateProductRequest): Promise<CreateProductResponse> => {
+    const response = await axios.post('http://localhost:3333/api/products', 
+        {
+            name,
+            description,
+            price
+        }, 
+        {
+            headers: {
+            'Authorization': `Bearer Token`
         }
     })
+
+    return response.data
 }

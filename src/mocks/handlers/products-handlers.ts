@@ -14,10 +14,10 @@ const getProducts = (quantity: number): Product[] =>
         ),
 )
 
-const products = getProducts(5)
+let products = getProducts(5)
 
 export const productsHandlers = [
-    http.get('http://localhost:8080/api/products', () => 
+    http.get('http://localhost:3333/api/products', () => 
         HttpResponse.json({
             data: {
                 products: [
@@ -26,12 +26,10 @@ export const productsHandlers = [
             }
         })
     ),
-    http.get('http://localhost:8080/api/products/:id', ({ params }) => { 
+    http.get('http://localhost:3333/api/products/:id', ({ params }) => { 
         const { id } = params
 
         const findedProduct  = products.find(product => product.id === id)
-
-        console.log(findedProduct)
 
         if (!findedProduct) {
             return new HttpResponse(null, {
@@ -46,21 +44,44 @@ export const productsHandlers = [
             }
         })
     }),
-    http.post('http://localhost:8080/api/products', async (resolver) => {
-        const product = await resolver.request.json() as Product
+    http.post('http://localhost:3333/api/products', async ({ request }) => {
+        const body = await request.json() as Omit<Product, 'id'>
 
-        if (product) {
-            products.push({
-                ...product,
-                id: crypto.randomUUID()
-            })
+        const product = {
+            id: crypto.randomUUID(),
+            ...body
         }
 
-        return new HttpResponse('Saved', {
-            status: 201,
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          })
+        products = [product, ...products]
+    
+        return HttpResponse.json({
+            data: {
+                product
+            }
+        }, {
+            status: 201
+        })
+    }),
+    http.delete('http://localhost:3333/api/products/:id', ({ params }) => {
+        const { id } = params
+
+        const findedProduct  = products.find(product => product.id === id)
+
+        if (!findedProduct) {
+            return HttpResponse.json(null, {
+                status: 404,
+                statusText: 'Resource not found.'
+            }, )
+        }
+
+        products = products.filter(product => product.id !== id)
+    
+        return HttpResponse.json({
+            data: {
+                product: findedProduct
+            }
+        }, {
+            status: 204
+        })
     })
 ]

@@ -1,6 +1,6 @@
 import { Box, DropdownMenu, IconButton, Table } from '@radix-ui/themes'
 import { EllipsisVertical } from 'lucide-react'
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Product } from '../../../../types/entities/Product'
 
 
@@ -9,6 +9,15 @@ interface ProductsTableProps {
 }
 
 export const ProductsTable = ({ products }: ProductsTableProps) => {
+    const navigate = useNavigate()
+    
+    const handleClickToViewProductDetails = (id: string) => {
+        navigate(`/products/view/${id}`)
+    }
+
+    const handleClickToDeleteProduct = (id: string) => {
+        navigate(`/products/delete/${id}`)
+    }
 
     return (
         <Table.Root>
@@ -37,23 +46,28 @@ export const ProductsTable = ({ products }: ProductsTableProps) => {
                             </Table.Cell>
                             <Table.Cell>
                             <DropdownMenu.Root>
-  <DropdownMenu.Trigger>
-    <IconButton variant="ghost">
-    <EllipsisVertical />
-    </IconButton>
-  </DropdownMenu.Trigger>
-  <DropdownMenu.Content>
-    <DropdownMenu.Item>
-        <Link to={`/products/view/${id}`}>Visualizar</Link>
-    </DropdownMenu.Item>
-    <DropdownMenu.Item>Editar</DropdownMenu.Item>
-    <DropdownMenu.Separator />
+                                <DropdownMenu.Trigger>
+                                    <IconButton variant="ghost">
+                                        <EllipsisVertical />
+                                    </IconButton>
+                                </DropdownMenu.Trigger>
+                                <DropdownMenu.Content>
+                                <DropdownMenu.Item 
+                                    onClick={() => handleClickToViewProductDetails(id)}
+                                >
+                                    Visualizar
+                                </DropdownMenu.Item>
+                                <DropdownMenu.Separator />
 
-    <DropdownMenu.Item shortcut="⌘ ⌫" color="red">
-      Delete
-    </DropdownMenu.Item>
-  </DropdownMenu.Content>
-</DropdownMenu.Root>
+                                <DropdownMenu.Item 
+                                    shortcut="⌘ ⌫" 
+                                    color="red" 
+                                    onClick={() => handleClickToDeleteProduct(id)}
+                                >
+                                    Deletar
+                                </DropdownMenu.Item>
+                                </DropdownMenu.Content>
+                            </DropdownMenu.Root>
                             </Table.Cell>
                         </Table.Row>
                     )

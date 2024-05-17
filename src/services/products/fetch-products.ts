@@ -9,7 +9,7 @@ export interface FetchProductsData {
 export type FetchProductsResponse = APIResponse<FetchProductsData>
 
 export const fetchProducts = async (): Promise<FetchProductsResponse> => {
-    const response = await axios.get('http://localhost:8080/api/products', {
+    const response = await axios.get('http://localhost:3333/api/products', {
         headers: {
         'Authorization': `Bearer Token`
         }

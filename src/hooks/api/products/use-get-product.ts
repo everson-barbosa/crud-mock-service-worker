@@ -1,29 +1,29 @@
 import { create } from "zustand";
-import { FetchProductsData, fetchProducts } from "../../services/products/fetch-products";
+import { GetProductParams, GetProductData, getProduct } from '../../../services/products/get-product'
 
-interface useFetchProductsProps {
-    data: FetchProductsData | null
+interface useGetProductProps {
+    data: GetProductData | null
     isLoading: boolean
     isError: boolean
     lastRequest: Date | null
-    fetch: () => Promise<void>
+    requestAPI: (params: GetProductParams) => Promise<void>
 }
 
-export const useFetchProducts = create<useFetchProductsProps>((set) => ({
+export const useGetProduct = create<useGetProductProps>((set) => ({
     data: null,
     isLoading: false,
     isError: false,
     lastRequest: null,
-    fetch: async () => {
+    requestAPI: async ({ id }: GetProductParams) => {
         set({ isLoading: true, isError: false })
 
         try {
-            const { data } = await fetchProducts()
+            const { data } = await getProduct({ id })
 
             set({ data, lastRequest: new Date() })
         } 
         catch {
-            console.error('Error on fetch products')
+            console.error(`Error on get product ${id}`)
 
             set({ isError: true })
         } 

@@ -7,13 +7,13 @@ export interface GetProductParams {
 }
 
 export interface GetProductData {
-    products: Product[]
+    product: Product
 }
 
 export type GetProductResponse = APIResponse<GetProductData>
 
 export const getProduct = async ({ id }: GetProductParams): Promise<GetProductResponse> => {
-    const response = await axios.get(`http://localhost:8080/api/products/${id}`, {
+    const response = await axios.get(`http://localhost:3333/api/products/${id}`, {
         headers: {
         'Authorization': `Bearer Token`
         }

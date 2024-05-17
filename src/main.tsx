@@ -9,9 +9,11 @@ import './global.css'
 import '@radix-ui/themes/styles.css';
 
 async function deferRender() {
-  const { worker } = await import('./mocks/browser.ts')
+  if (import.meta.env.VITE_MOCK_MODE === "true") {
+    const { worker } = await import('./mocks/browser.ts')
 
-  return worker.start()
+    return worker.start()
+  }
 }
 
 deferRender().then(() => {

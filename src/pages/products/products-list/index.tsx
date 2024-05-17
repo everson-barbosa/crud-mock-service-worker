@@ -1,15 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react"
-import { useFetchProducts } from "../../../hooks/api/use-fetch-products"
+import { useFetchProducts } from "../../../hooks/api/products/use-fetch-products"
 import { ProductsTable } from "./components/products-table"
-import { Container, Callout, Heading } from '@radix-ui/themes'
-import { Info } from 'lucide-react'
+import { Container, Callout, Heading, Flex, Button } from '@radix-ui/themes'
+import { Info, InfoIcon, PlusIcon } from 'lucide-react'
+import { Outlet, useNavigate } from "react-router-dom"
 
 export const ProductsListPage = () => {
-    const { data, lastRequest, fetch: fetchProducts } = useFetchProducts()   
+    const navigate = useNavigate()
+    const { data, isError, lastRequest, requestAPI } = useFetchProducts()   
 
     const findManyProducts = async () => {
-        await fetchProducts()
+        await requestAPI()
+    }
+
+    const handleClickToCreate = () => {
+        navigate('/products/create')
     }
 
     useEffect(() => {
@@ -17,12 +23,29 @@ export const ProductsListPage = () => {
             findManyProducts()
         }
     }, [])
+    
 
     return (
-        <Container size="3">
-            <Heading my="4">Listagem de produtos</Heading>
+        <Container size="2" p='4'>
+            <Flex justify='between' align='center' gap='2'>
+                <Heading my="4" size='4'>Listagem de produtos</Heading>
+                <Button onClick={handleClickToCreate}>
+                    <PlusIcon size='14'/>
+                    Adicionar
+                </Button>
+            </Flex>
 
             <ProductsTable products={data?.products ?? []} />
+
+            { isError && 
+                <Callout.Root my='4' variant="surface" color="crimson">
+                    <Callout.Icon>
+                        <InfoIcon />
+                    </Callout.Icon>
+                    <Callout.Text>
+                        Erro ao tentar carregar os produtos
+                    </Callout.Text>
+                </Callout.Root> }
 
             { lastRequest && 
                 <Callout.Root my='4'>
@@ -34,6 +57,8 @@ export const ProductsListPage = () => {
                     </Callout.Text>
                 </Callout.Root>
             }
+
+            <Outlet />
         </Container>
     )
 }

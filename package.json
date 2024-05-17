@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "test": "vitest",
+    "test": "vitest src",
     "test:ui": "vitest --ui",
     "test:e2e": "npx playwright test",
     "test:e2e:reports": "npx playwright show-report",
