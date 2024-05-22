@@ -1,14 +1,16 @@
-import { Box, DropdownMenu, IconButton, Table } from '@radix-ui/themes'
-import { EllipsisVertical } from 'lucide-react'
+import { Box, Flex, IconButton, Table } from '@radix-ui/themes'
+import { Trash2Icon, ViewIcon } from 'lucide-react'
 import { useNavigate } from "react-router-dom";
 import { Product } from '../../../../types/entities/Product'
+import { ProductsTableLoading } from './products-table-loading';
 
 
 interface ProductsTableProps {
     products: Product[]
+    isLoading: boolean
 }
 
-export const ProductsTable = ({ products }: ProductsTableProps) => {
+export const ProductsTable = ({ products, isLoading }: ProductsTableProps) => {
     const navigate = useNavigate()
     
     const handleClickToViewProductDetails = (id: string) => {
@@ -31,8 +33,9 @@ export const ProductsTable = ({ products }: ProductsTableProps) => {
             </Table.Header>
         
             <Table.Body>
+                { isLoading && <ProductsTableLoading quantity={10} /> }
                 {
-                    products.map(({ id, name, description, price }) =>                 
+                    !isLoading && products.map(({ id, name, description, price }) =>                 
                         <Table.Row key={id}>
                             <Table.RowHeaderCell>{name}</Table.RowHeaderCell>
                             <Table.Cell>{description}</Table.Cell>
@@ -45,29 +48,14 @@ export const ProductsTable = ({ products }: ProductsTableProps) => {
                                 </Box>
                             </Table.Cell>
                             <Table.Cell>
-                            <DropdownMenu.Root>
-                                <DropdownMenu.Trigger>
-                                    <IconButton variant="ghost">
-                                        <EllipsisVertical />
+                                <Flex gap="4">
+                                    <IconButton className='view-button' variant='ghost' onClick={() => handleClickToViewProductDetails(id)}>
+                                        <ViewIcon size={20}/> 
                                     </IconButton>
-                                </DropdownMenu.Trigger>
-                                <DropdownMenu.Content>
-                                <DropdownMenu.Item 
-                                    onClick={() => handleClickToViewProductDetails(id)}
-                                >
-                                    Visualizar
-                                </DropdownMenu.Item>
-                                <DropdownMenu.Separator />
-
-                                <DropdownMenu.Item 
-                                    shortcut="⌘ ⌫" 
-                                    color="red" 
-                                    onClick={() => handleClickToDeleteProduct(id)}
-                                >
-                                    Deletar
-                                </DropdownMenu.Item>
-                                </DropdownMenu.Content>
-                            </DropdownMenu.Root>
+                                    <IconButton className='delete-button' variant='ghost' color='crimson' onClick={() => handleClickToDeleteProduct(id)}>
+                                        <Trash2Icon size={20}/>
+                                    </IconButton>
+                                </Flex>
                             </Table.Cell>
                         </Table.Row>
                     )

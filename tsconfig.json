@@ -24,7 +24,7 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    "./vitest.setup.ts"
+    "src/__tests__/vitest.setup.tsx"
   ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

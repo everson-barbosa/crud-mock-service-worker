@@ -1,4 +1,4 @@
-import { Button, Dialog, Flex, Heading, IconButton, Text, TextArea, TextField, Tooltip } from "@radix-ui/themes"
+import { Button, Dialog, Flex, Heading, IconButton, Spinner, Text, TextArea, TextField, Tooltip } from "@radix-ui/themes"
 import { ChangeEvent, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { useCreateProduct } from "../../../hooks/api/products/use-create-product"
@@ -15,6 +15,7 @@ export const ProductCreatePage = () => {
         description: '',
         price: 0,
     })
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
     const handleClickToFillAutomatic = () => {
         setProduct({
@@ -37,9 +38,15 @@ export const ProductCreatePage = () => {
     }
 
     const handleClickToCreate = async () => {
-        await createProduct(product)
-        await fetchProducts()
-        navigate(-1)
+        setIsSubmitting(true)
+
+        try {
+            await createProduct(product)
+            navigate(-1)
+            await fetchProducts()
+        } catch (err) {
+            console.error(err)
+        }
     }
 
     const isSubmitButtonEnabled = !product.name || !product.description || !product.price
@@ -102,13 +109,17 @@ export const ProductCreatePage = () => {
 
                 <Flex gap="3" mt="4" justify="end">
                 <Dialog.Close>
-                    <Button color="gray" onClick={handleClickToBack}>
+                    <Button color="gray" disabled={isSubmitting} onClick={handleClickToBack}>
                     Cancelar
                     </Button>
                 </Dialog.Close>
-                <Dialog.Close>
-                    <Button onClick={handleClickToCreate} disabled={isSubmitButtonEnabled}>Criar</Button>
-                </Dialog.Close>
+                <Button 
+                onClick={handleClickToCreate} 
+                disabled={isSubmitButtonEnabled || isSubmitting}
+                > 
+                    Criar
+                    {isSubmitting && <Spinner />}
+                </Button>
                 </Flex>
             </Dialog.Content>
         </Dialog.Root>

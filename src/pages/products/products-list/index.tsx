@@ -8,7 +8,7 @@ import { Outlet, useNavigate } from "react-router-dom"
 
 export const ProductsListPage = () => {
     const navigate = useNavigate()
-    const { data, isError, lastRequest, requestAPI } = useFetchProducts()   
+    const { data, isError, isLoading, lastRequest, requestAPI } = useFetchProducts()   
 
     const findManyProducts = async () => {
         await requestAPI()
@@ -24,18 +24,17 @@ export const ProductsListPage = () => {
         }
     }, [])
     
-
     return (
         <Container size="2" p='4'>
             <Flex justify='between' align='center' gap='2'>
                 <Heading my="4" size='4'>Listagem de produtos</Heading>
-                <Button onClick={handleClickToCreate}>
+                <Button onClick={handleClickToCreate} disabled={isLoading} role="Add button">
                     <PlusIcon size='14'/>
                     Adicionar
                 </Button>
             </Flex>
 
-            <ProductsTable products={data?.products ?? []} />
+            <ProductsTable products={data?.products ?? []} isLoading={isLoading} />
 
             { isError && 
                 <Callout.Root my='4' variant="surface" color="crimson">

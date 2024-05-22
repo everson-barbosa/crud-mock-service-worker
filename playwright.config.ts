@@ -34,18 +34,41 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      use: 
+      { 
+        ...devices['Desktop Chrome'], 
+        headless: false,         
+        viewport: { width: 1280, height: 720 },
+        ignoreHTTPSErrors: true,
+        video: 'on-first-retry', 
+      },
     },
 
+    /*
     {
       name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      use: 
+      { 
+        ...devices['Desktop Firefox'],
+        headless: false,         
+        viewport: { width: 1280, height: 720 },
+        ignoreHTTPSErrors: true,
+        video: 'on-first-retry', 
+      },
     },
 
     {
       name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      use: 
+      { 
+        ...devices['Desktop Safari'],
+        headless: false,         
+        viewport: { width: 1280, height: 720 },
+        ignoreHTTPSErrors: true,
+        video: 'on-first-retry', 
+      },
     },
+    */
 
     /* Test against mobile viewports. */
     // {
@@ -69,9 +92,9 @@ export default defineConfig({
   ],
 
   /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://127.0.0.1:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
+  webServer: {
+    command: 'yarn dev:mock',
+    url: 'http://127.0.0.1:3000',
+    reuseExistingServer: !process.env.CI,
+  },
 });

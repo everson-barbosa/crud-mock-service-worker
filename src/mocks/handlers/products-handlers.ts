@@ -1,6 +1,8 @@
-import { http, HttpResponse } from 'msw'
+import { delay, http, HttpResponse } from 'msw'
 import { faker } from '@faker-js/faker'
 import { Product } from '../../types/entities/Product'
+
+const mockDelayInMilliseconds = 1000
 
 const getProducts = (quantity: number): Product[] => 
     Array.from({ length: quantity }).map(() =>     
@@ -17,34 +19,41 @@ const getProducts = (quantity: number): Product[] =>
 let products = getProducts(5)
 
 export const productsHandlers = [
-    http.get('http://localhost:3333/api/products', () => 
-        HttpResponse.json({
+    http.get(`${import.meta.env.VITE_API_URL}/api/products`, async () => {
+        await delay(mockDelayInMilliseconds)
+
+        return HttpResponse.json({
             data: {
                 products: [
                     ...products
                 ]
             }
         })
-    ),
-    http.get('http://localhost:3333/api/products/:id', ({ params }) => { 
+    }),
+    http.get(`${import.meta.env.VITE_API_URL}/api/products/:id`, async ({ params }) => { 
+        await delay(mockDelayInMilliseconds)
+
         const { id } = params
 
         const findedProduct  = products.find(product => product.id === id)
 
-        if (!findedProduct) {
-            return new HttpResponse(null, {
-                status: 404,
-                statusText: 'Resource not found.'
+        if (findedProduct) {
+            return HttpResponse.json({
+                data: {
+                    product: findedProduct
+                }
             })
         }
-    
-        return HttpResponse.json({
-            data: {
-                product: findedProduct
-            }
+
+        return new HttpResponse(null, {
+            status: 404,
+            statusText: 'Resource not found.'
         })
+    
     }),
-    http.post('http://localhost:3333/api/products', async ({ request }) => {
+    http.post(`${import.meta.env.VITE_API_URL}/api/products`, async ({ request }) => {
+        await delay(mockDelayInMilliseconds)
+
         const body = await request.json() as Omit<Product, 'id'>
 
         const product = {
@@ -62,26 +71,32 @@ export const productsHandlers = [
             status: 201
         })
     }),
-    http.delete('http://localhost:3333/api/products/:id', ({ params }) => {
+    http.delete(`${import.meta.env.VITE_API_URL}/api/products/:id`, async ({ params }) => {
+        await delay(mockDelayInMilliseconds)
+
         const { id } = params
 
         const findedProduct  = products.find(product => product.id === id)
 
-        if (!findedProduct) {
-            return HttpResponse.json(null, {
-                status: 404,
-                statusText: 'Resource not found.'
-            }, )
+        if (findedProduct) {
+
+            products = products.filter(product => product.id !== id)
+        
+            return HttpResponse.json({
+                data: {
+                    product: findedProduct
+                }
+            }, {
+                status: 200
+            }) 
         }
 
-        products = products.filter(product => product.id !== id)
-    
         return HttpResponse.json({
-            data: {
-                product: findedProduct
-            }
+            data: {}
         }, {
-            status: 204
+            status: 404,
+            statusText: 'Resource not found.'
         })
+ 
     })
 ]

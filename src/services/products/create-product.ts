@@ -15,7 +15,7 @@ export interface CreateProductData {
 export type CreateProductResponse = APIResponse<CreateProductData>
 
 export const createProduct = async ({ name, description, price }: CreateProductRequest): Promise<CreateProductResponse> => {
-    const response = await axios.post('http://localhost:3333/api/products', 
+    const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/products`, 
         {
             name,
             description,

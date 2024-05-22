@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "dev:mock": "vite --mode mock",
     "test": "vitest src",
     "test:ui": "vitest --ui",
     "test:e2e": "npx playwright test",
@@ -16,6 +17,7 @@
   },
   "dependencies": {
     "@radix-ui/themes": "^3.0.3",
+    "@vitest/coverage-v8": "^1.6.0",
     "axios": "^1.6.8",
     "localforage": "^1.10.0",
     "lucide-react": "^0.378.0",

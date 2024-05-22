@@ -13,7 +13,7 @@ export interface DeleteProductData {
 export type DeleteProductResponse = APIResponse<DeleteProductData>
 
 export const deleteProduct = async ({ id }: DeleteProductParams): Promise<DeleteProductResponse> => {
-    const response = await axios.delete(`http://localhost:3333/api/products/${id}`, {
+    const response = await axios.delete(`${import.meta.env.VITE_API_URL}/api/products/${id}`, {
         headers: {
         'Authorization': `Bearer Token`
         }

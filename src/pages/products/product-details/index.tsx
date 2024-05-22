@@ -1,15 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Badge, Button, Code, Container, DataList, Flex, Heading, IconButton } from '@radix-ui/themes'
+import { Badge, Button, Callout, Code, Container, DataList, Flex, Heading, IconButton } from '@radix-ui/themes'
 import { useEffect } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import { useGetProduct } from '../../../hooks/api/products/use-get-product';
-import { ChevronLeft, CopyIcon, Trash2Icon } from 'lucide-react';
+import { ChevronLeft, CopyIcon, InfoIcon, Trash2Icon } from 'lucide-react';
+import { isError } from 'util';
 
 export const ProductDetailsPage = () => {
     const navigate = useNavigate()
     const { productId } = useParams();
     
-    const { data, requestAPI: getProduct } = useGetProduct()
+    const { data, isError, requestAPI: getProduct } = useGetProduct()
 
     const handleClickToBack = () => {
         navigate('/products')
@@ -32,6 +33,16 @@ export const ProductDetailsPage = () => {
     return (
         <Container size="2" p='4'>
             <Heading my="4">Detalhes do produto</Heading>
+
+            { isError && 
+                <Callout.Root my='4' variant="surface" color="crimson">
+                    <Callout.Icon>
+                        <InfoIcon />
+                    </Callout.Icon>
+                    <Callout.Text>
+                        Erro ao tentar carregar os produtos
+                    </Callout.Text>
+                </Callout.Root> }
 
             { data &&
              <DataList.Root>
