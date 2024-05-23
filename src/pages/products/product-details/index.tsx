@@ -4,7 +4,6 @@ import { useEffect } from 'react';
 import { Outlet, useNavigate, useParams } from 'react-router-dom'
 import { useGetProduct } from '../../../hooks/api/products/use-get-product';
 import { ChevronLeft, CopyIcon, InfoIcon, Trash2Icon } from 'lucide-react';
-import { isError } from 'util';
 
 export const ProductDetailsPage = () => {
     const navigate = useNavigate()
@@ -29,6 +28,8 @@ export const ProductDetailsPage = () => {
             findUniqueProduct(productId)
         }
     }, [productId])
+
+    console.log(productId)
 
     return (
         <Container size="2" p='4'>
